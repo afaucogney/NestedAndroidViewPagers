@@ -1,17 +1,22 @@
 package fr.millezimu.app.nestedviewpager.Activity.Activity;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.view.View;
+import android.widget.ImageView;
 
+import com.oguzdev.circularfloatingactionmenu.library.FloatingActionButton;
 import com.viewpagerindicator.TitlePageIndicator;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import fr.millezimu.app.nestedviewpager.Activity.Model.FragmentConfiguration;
 import fr.millezimu.app.nestedviewpager.Activity.Adapter.MyMainFragmentPagerStateAdapter;
+import fr.millezimu.app.nestedviewpager.Activity.Fragment.MySubViewPagerFragment;
+import fr.millezimu.app.nestedviewpager.Activity.Model.FragmentConfiguration;
 import fr.millezimu.app.nestedviewpager.R;
 
 /**
@@ -20,6 +25,7 @@ import fr.millezimu.app.nestedviewpager.R;
 public class MainActivity extends FragmentActivity {
 
     final int MAIN_FRAGMENT_COUNT = 4;
+    private FloatingActionButton rightLowerButton;
 
     public List<FragmentConfiguration> getConfigList() {
         return configList;
@@ -39,7 +45,7 @@ public class MainActivity extends FragmentActivity {
         configList = generateConfiguration();
 
         // Creation de l'adapter
-        mMainPagerStateAdapter = new MyMainFragmentPagerStateAdapter(super.getSupportFragmentManager(),configList);
+        mMainPagerStateAdapter = new MyMainFragmentPagerStateAdapter(super.getSupportFragmentManager(), configList);
         // Creation du Pager
         mPagerMain = (ViewPager) super.findViewById(R.id.vp_main);
         // Affectation de l'adapter au ViewPager
@@ -49,7 +55,7 @@ public class MainActivity extends FragmentActivity {
         indicator.setViewPager(mPagerMain);
         mIndicator = indicator;
 
-
+        setupFBA();
 
     }
 
@@ -75,5 +81,38 @@ public class MainActivity extends FragmentActivity {
             text[i] = characters.charAt(rng.nextInt(characters.length()));
         }
         return new String(text);
+    }
+
+    private void setupFBA() {
+        final ImageView fabIconNext = new ImageView(this);
+        fabIconNext.setImageDrawable(getResources().getDrawable(R.drawable.abc_ic_go_search_api_mtrl_alpha));
+
+        rightLowerButton = new FloatingActionButton.Builder(this)
+                .setContentView(fabIconNext)
+                .setPosition(FloatingActionButton.POSITION_BOTTOM_RIGHT)
+                .build();
+
+        rightLowerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int c = mPagerMain.getCurrentItem();
+                MySubViewPagerFragment frag = (MySubViewPagerFragment) mMainPagerStateAdapter.getItem(c);
+                if (!frag.swipNextFragment()) {
+
+                    new Handler().post(new Runnable() {
+                        @Override
+                        public void run() {
+                            if ((mPagerMain.getCurrentItem() < (mMainPagerStateAdapter.getCount() - 1)))
+                                mPagerMain.setCurrentItem(mPagerMain.getCurrentItem() + 1);//, true);
+                            else
+                                finish();
+                        }
+                    });
+
+
+                }
+            }
+        });
+
     }
 }

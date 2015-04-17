@@ -1,6 +1,7 @@
 package fr.millezimu.app.nestedviewpager.Activity.Fragment;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -38,5 +39,21 @@ public class MySubViewPagerFragment extends Fragment {
         indicator.setViewPager(mPagerSub);
         mIndicatorSub = indicator;
         return v;
+    }
+
+    public boolean swipNextFragment() {
+        boolean result = false;
+        int c = mPagerSub.getCurrentItem();
+        if (c < (mPagerSub.getAdapter().getCount() - 1)) {
+            result = true;
+            new Handler().post(new Runnable() {
+                @Override
+                public void run() {
+                    mPagerSub.setCurrentItem(mPagerSub.getCurrentItem() + 1);
+                }
+            });
+
+        }
+        return result;
     }
 }

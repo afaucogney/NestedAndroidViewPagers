@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "fr.millezimu.app.nestedviewpager"
-        minSdkVersion 14
+        minSdkVersion 15
         targetSdkVersion 22
         versionCode 1
         versionName "1.0"
@@ -23,5 +23,5 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     compile 'com.android.support:appcompat-v7:22.0.0'
     compile 'fr.avianey.com.viewpagerindicator:library:2.4.1@aar'
-//    compile 'org.immutables:gson:2.0.6'
+    compile 'com.oguzdev:CircularFloatingActionMenu:1.0.2'
 }
